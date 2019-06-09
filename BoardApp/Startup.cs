@@ -41,12 +41,15 @@ namespace BoardApp
                 options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
 
 
+            services.AddScoped<EquipmentService>();
+            services.AddScoped<EquipmentRepository>();
             services.AddScoped<RepairCaseService>();
             services.AddScoped<RepairCaseRepository>();
             services.AddScoped<WorkerService>();
             services.AddScoped<WorkerRepository>();
             services.AddScoped<AuthService>();
             services.AddScoped<AuthRepository>();
+            services.AddScoped<OwnerRepository>();
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<BoardContext>()

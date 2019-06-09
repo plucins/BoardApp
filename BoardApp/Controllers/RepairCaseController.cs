@@ -1,15 +1,11 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using BoardApp.Context;
 using BoardApp.Models;
 using BoardApp.Models.dto;
 using BoardApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BoardApp.Controllers
 {
