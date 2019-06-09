@@ -18,9 +18,11 @@ namespace BoardApp.Repository
             _context = context;
         }
 
-        public Task<IEnumerable<Equipment>> GetAll()
+        public async Task<IEnumerable<Equipment>> GetAll()
         {
-            throw new System.NotImplementedException();
+            var eqs = await _context.Equipments.ToListAsync();
+            eqs.ForEach(e => { _context.Entry(e).Reference(r => r.Owner).Load();});
+            return eqs;
         }
 
         public async Task<Equipment> GetById(long id)

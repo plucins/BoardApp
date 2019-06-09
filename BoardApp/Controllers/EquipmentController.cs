@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BoardApp.Models;
 using BoardApp.Services;
@@ -24,6 +26,12 @@ namespace BoardApp.Controllers
         public async Task<ActionResult<Equipment>> AddEquipment([FromBody] Equipment equipment)
         {
             return await _equipmentService.addEquipment(equipment);
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<Equipment>> GetAll()
+        {
+            return await _equipmentService.GetAll();
         }
     }
 }

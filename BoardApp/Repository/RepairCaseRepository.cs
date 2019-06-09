@@ -12,19 +12,25 @@ namespace BoardApp.Repository
     {
         private readonly BoardContext _context;
         private readonly WorkerRepository _workerRepository;
+        private readonly EquipmentRepository _equipmentRepository;
 
-        public RepairCaseRepository(BoardContext context, WorkerRepository workerRepository)
+        public RepairCaseRepository(BoardContext context, WorkerRepository workerRepository, EquipmentRepository equipmentRepository)
         {
             _context = context;
             _workerRepository = workerRepository;
+            _equipmentRepository = equipmentRepository;
         }
 
 
         public async Task<IEnumerable<RepairCase>> GetAll()
         {
             var cases = await _context.RepairCases.ToListAsync();
-            cases.ForEach(c => { _context.Entry(c).Reference(r => r.Worker).LoadAsync(); });
-            cases.ForEach(c => { _context.Entry(c).Reference(r => r.Equipment).LoadAsync(); });
+            cases.ForEach(c => { _context.Entry(c).Reference(r => r.Worker).Load(); });
+            cases.ForEach(c =>
+            {
+                _context.Entry(c).Reference(r => r.Equipment).Load();
+                _context.Entry(c.Equipment).Reference(x => x.Owner).Load();
+            });
             return cases;
         }
 
@@ -64,6 +70,11 @@ namespace BoardApp.Repository
                 if (entity.Worker != null && entity.Worker.Id != 0)
                 {
                     caseToUpdate.Worker = await _workerRepository.GetById(entity.Worker.Id);
+                }
+                
+                if (entity.Equipment != null && entity.Equipment.Id != 0)
+                {
+                    caseToUpdate.Equipment = await _equipmentRepository.GetById(entity.Equipment.Id);
                 }
 
                 await _context.SaveChangesAsync();

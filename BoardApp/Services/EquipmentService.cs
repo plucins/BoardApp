@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BoardApp.Models;
 using BoardApp.Repository;
@@ -32,6 +33,11 @@ namespace BoardApp.Services
             }
             
             return await _equipmentRepository.Add(equipment);
+        }
+
+        public async Task<IEnumerable<Equipment>> GetAll()
+        {
+            return await _equipmentRepository.GetAll();
         }
     }
 }
