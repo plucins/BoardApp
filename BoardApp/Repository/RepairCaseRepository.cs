@@ -14,7 +14,8 @@ namespace BoardApp.Repository
         private readonly WorkerRepository _workerRepository;
         private readonly EquipmentRepository _equipmentRepository;
 
-        public RepairCaseRepository(BoardContext context, WorkerRepository workerRepository, EquipmentRepository equipmentRepository)
+        public RepairCaseRepository(BoardContext context, WorkerRepository workerRepository,
+            EquipmentRepository equipmentRepository)
         {
             _context = context;
             _workerRepository = workerRepository;
@@ -29,7 +30,12 @@ namespace BoardApp.Repository
             cases.ForEach(c =>
             {
                 _context.Entry(c).Reference(r => r.Equipment).Load();
-                _context.Entry(c.Equipment).Reference(x => x.Owner).Load();
+                if (c.Equipment != null)
+                {
+                    _context.Entry(c.Equipment).Reference(x => x.Owner).Load();
+                }
+
+                
             });
             return cases;
         }
@@ -71,7 +77,7 @@ namespace BoardApp.Repository
                 {
                     caseToUpdate.Worker = await _workerRepository.GetById(entity.Worker.Id);
                 }
-                
+
                 if (entity.Equipment != null && entity.Equipment.Id != 0)
                 {
                     caseToUpdate.Equipment = await _equipmentRepository.GetById(entity.Equipment.Id);
@@ -79,7 +85,7 @@ namespace BoardApp.Repository
 
                 await _context.SaveChangesAsync();
             }
-            
+
 
             return await GetById(caseToUpdate.Id) ?? entity;
         }
